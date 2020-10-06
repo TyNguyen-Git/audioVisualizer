@@ -1,3 +1,5 @@
+Because of Web Browser CORS policy restrictions, the audio visualizer cannot be run normally on a web browser. It must first be hosted on some type of server like apache or a web extension that creates a temporary server.
+
 audioVisualizer is a HTML/CSS based audio visualizer built through the usage of canvas and the Audio Context Web API.
 
 This project was done to practice both my CSS, HTML, and general coding foundations, as well as practice on creating static websites.
@@ -20,3 +22,4 @@ Web based audio devices are much more harder to handle than anticipated. Underst
 Static websites are generally bad practice for future projects. Static websites cause many issues such as dynamic sizing problems, and can end up restricting the overall scope of a project.
 
 The way I viewed issues and how to solve them were flawed. At the beginning of this project my view of errors and bugs leaned more towards the fact that the program itself is broken and not my thought process. After many hours of failed testing, I started back at the beginning with a different outlook on how to solve issues. This included further documentation research, better understanding of the tools at my disposal, and understanding that the code is doing as instructed and I am the one at fault for the errors.
+
