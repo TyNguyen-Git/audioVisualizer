@@ -1,0 +1,170 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+  <!-- cdn and style sheet relationship declarations -->
+  <!-- <link rel="shortcut icon" href="favicon.ico"> -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<!-- audio file that can be used on local hosting http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4  saved for when not on server-->
+<body>
+
+  <div id="right">
+    <!-- beginning of the center portion of website -->
+    <canvas id="c1" style="position:absolute; ">
+    </canvas>
+  </div>
+  <div id="overlay" style="position:absolute;">
+    <div style="text-align: center;">
+      <p style="color:white; border: black; justify-content: center; font-weight: bolder;"> Press the white play button
+        to initiate the visualizer.</p>
+    </div>
+    <audio id="audio" onended="playlistFunction()" crossOrigin="anonymous" src="Songs/1.mp3"></audio>
+    <div class="group" style="text-align:center;">
+      <button id="InitializerButton" type="button" onclick=""><i class="fa fa-play"
+          style="font-size:24px; color:white"></i></button>
+      <button id="pauseButton" type="button" onclick=""><i class="fa fa-play"
+          style="font-size:24px; display:none;"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Event Listeners, activates on button presses and audio que's              
+    document.getElementById("InitializerButton").addEventListener("click", function () { // on button press with id 'InitializerButton' run code below
+      var audio = document.getElementById('audio'); // get element with ID audio
+      var initiliazer = document.getElementById('InitializerButton'); // get element with ID playButtion
+      var play = document.getElementById('pauseButton');
+      play.innerHTML = '<i class="fa fa-pause" style = "font-size:24px; display:contents; "></i>';
+      play.className = "is-playing";
+      initiliazer.outerHTML = ''; // insert an icon into HTML of element pauseButton to represent pause button
+      initiliazer.className = "is-playing"; // change pauseButton class name to is-playing
+      audio.play(); // play audio 
+      createAudio(audio); // run createAudio function while sending the audio being played as a parameter            
+    });
+
+    document.getElementById("pauseButton").addEventListener("click", function () { // on button press with id 'pauseButton' run code below
+      var audio = document.getElementById('audio'); // get element with ID audio
+      if (this.className == 'is-playing') { // if local object class name(in this case the pauseButton) is equal to is-playing run code below
+        this.className = ""; // set class name to nothing
+        this.innerHTML = '<i class="fa fa-play" style = "font-size:24px;">'; // insert an icon into HTML onto element
+        audio.pause(); // pause audio
+
+      } else {
+        this.className = "is-playing"; // set class name to is-playing
+        this.innerHTML = '<i class="fa fa-pause" style = "font-size:24px;"></i>'; // insert pause icon
+        audio.play(); // play audio
+      }
+
+    });
+    function playlistFunction() {
+      if (audioctx.state == "running") { // check the state of the AudioContext API service, if it is running run code below); 
+        document.getElementById('audio').remove(); // get element with id audio and delete it (this resets the audio element in the DOM structure, allowing the visualizer to visualize all songs given to it instead of just one)
+        var a = document.createElement('audio'); // create an audio element
+        let playlistFunction = document.getElementById('overlay'); // get element with ID overlay
+        playlistFunction.appendChild(a); // append the audio element inside the element with ID overlay 
+        a.setAttribute('id', 'audio'); // set the ID of the audio element to 'audio'
+        a.setAttribute('onended', 'playlistFunction()');
+      }
+      var audio = document.querySelector('audio'),
+        i = 0;
+      console.log(audio);
+      var playlist = new Array('Songs/2.mp3', 'Songs/3.mp3', 'Songs/4.mp3', 'Songs/5.mp3', 'Songs/6.mp3', 'Songs/7.mp3', 'Songs/8.mp3', 'Songs/9.mp3', 'Songs/10.mp3', 'Songs/11.mp3', 'Songs/12.mp3', 'Songs/13.mp3', 'Songs/14.mp3', 'Songs/15.mp3', 'Songs/16.mp3', 'Songs/17.mp3', 'Songs/18.mp3', 'Songs/19.mp3', 'Songs/20.mp3');
+
+      audio.addEventListener('ended', function () {
+        i = ++i < playlist.length ? i : 0;
+        audio.src = playlist[i];
+        audio.play();
+      }, true);
+      audio.src = playlist[0];
+      audio.play();
+      createAudio(audio);
+    }
+    // visualizer global variable declaration and creation of base visualizer without any graphics
+
+    let audioctx = new (window.AudioContext || window.webkitAudioContext)(); // initiate AudioContext Web API
+    let bars = 200; // amount of bars that will show on vizualizer (fun to experiment with)
+    let bar_width = 10; // width of bars
+    audio = new Audio(); // initiate Audio object
+    let song = document.getElementById('audio'); // get Element with ID audio
+    let canvas = document.getElementById("c1"); // get element with ID c1
+    canvas.width = window.innerWidth; // set canvas width to width on the window it resides it (aka the width of the div it is in)
+    canvas.height = window.innerHeight;
+    let screenHeight = screen.height; // set canvas height to height on the window it resides it (aka the height of the div it is in)
+    canvas.setAttribute('height', screenHeight); // set canvas height to 1700, this is different from canvas.height. Difficult to explain, look up if needed.
+    let ctx = canvas.getContext("2d"); // set context of canvas to 2 dimensional
+    let center_x = canvas.width / 2; // variable to center circle along x axis
+    let center_y = canvas.height / 2; // variable to center circle along y axis
+    let radius = 200; // radius of circle
+    var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height); // create color gradient
+    gradient.addColorStop(0, "rgba(35, 7, 77, 1)");
+    gradient.addColorStop(1, "rgba(204, 83, 51, 1)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, "rgba(35, 7, 77, 1)"); // apply color to gradient
+    gradient.addColorStop(1, "rgba(204, 83, 51, 1)"); // apply color to gradient
+    ctx.fillStyle = gradient; // fill circle with gradient color
+
+  
+    ctx.beginPath(); // begin drawing circle
+    ctx.arc(center_x, center_y, radius, 0, 2 * Math.PI); // arc of the circle, starts at one point x,y rotates with radius variable, with no incisions to circle, and multiple math*pi by two to get complete circle.
+    ctx.stroke(); // strokes out the edge of the circle
+    ctx.fill(); // fills the circle in with fillStyle, in this case it fills in with gradient we made
+    function drawBar(x1, y1, x2, y2, width, frequency) {   // function that draws bars on visualizer
+      var lineColor = "rgb(" + frequency + ", " + frequency + ", " + 205 + ")"; // set line color based on frequency provided by data obtained later                      
+      ctx.strokeStyle = lineColor; // set strokeStyle to line color
+      ctx.lineWidth = width; // set lineWidth to width parameter
+      ctx.beginPath(); // begin calculating path
+      ctx.moveTo(x1, y1); // move bar up to x1 and y1 position
+      ctx.lineTo(x2, y2); // line bar up to x1 and x2 position
+      ctx.stroke(); // begin drawing bar
+    }
+    function createAudio(audio) { // function that creates audio nodes that will be translated into numerical data
+      audio.crossOrigin = "anonymous" // irrelevant, used to bypass GoogleChrome security settings
+      audioctx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioctx.createAnalyser(); // create AudioContext analyser node
+      source = audioctx.createMediaElementSource(audio); // create AudioContext MediaElementSource node
+      source.connect(analyser); // connect MediaElementSource Node to analyser node
+      analyser.connect(audioctx.destination); // connect analyser node to AudioContext destination
+      frequency_array = new Uint8Array(analyser.frequencyBinCount); // create an array which stores frequency data obtained by analyser
+      console.log(frequency_array);
+      animationLooper(); // run loop function
+    }
+    function animationLooper() { // function that creates the visualizer
+      let canvas = document.getElementById("c1"); // get element with ID c1
+      canvas.width = window.innerWidth; // set canvas width to width on the window it resides it (aka the width of the div it is in)
+      canvas.height = window.innerHeight; // set canvas height to height on the window it resides it (aka the height of the div it is in)
+      let screenHeight = screen.height;
+      canvas.setAttribute('height', screenHeight); // set canvas height to 1700, this is different from canvas.height. Difficult to explain, look up if needed.
+      let ctx = canvas.getContext("2d"); // set context of canvas to 2 dimensional
+      let center_x = canvas.width / 2; // variable to center circle along x axis
+      let center_y = canvas.height / 2; // variable to center circle along y axis
+      let radius = 200; // radius of circle
+      var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height); // create color gradient
+      gradient.addColorStop(0, "rgba(35, 7, 77, 1)"); // apply color to gradient
+      gradient.addColorStop(1, "rgba(204, 83, 51, 1)"); // apply color to gradient
+      gradient.addColorStop(0, "rgba(35, 7, 77, 1)");
+      gradient.addColorStop(1, "rgba(204, 83, 51, 1)");
+      ctx.fillStyle = gradient; // fill circle with gradient color
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath(); // begin drawing circle
+      ctx.arc(center_x, center_y, radius, 0, 2 * Math.PI); // arc of the circle, starts at one point x,y rotates with radius variable, with no incisions to circle, and multiple math*pi by two to get complete circle.
+      ctx.stroke(); // strokes out the edge of the circle
+      ctx.fill(); // fills the circle in with fillStyle, in this case it fills in with gradient we made
+      // ctx.drawImage(image,canvas.width / 2 - image.width / 2, canvas.height / 2 - image.height / 2,);
+      analyser.getByteFrequencyData(frequency_array); // analyse frequency array
+      for (var i = 0; i < bars; i++) {
+        rads = Math.PI * 2 / bars; // spacing between bars
+        bar_height = frequency_array[i] * 1.1; // height of bar
+        x = center_x + Math.cos(rads * i) * (radius); // position of x axis for bar
+        y = center_y + Math.sin(rads * i) * (radius); // position of y axis for bar
+        x_end = center_x + Math.cos(rads * i) * (radius + bar_height); // end position of x axis for bar
+        y_end = center_y + Math.sin(rads * i) * (radius + bar_height); // end position of y axis for bar
+        drawBar(x, y, x_end, y_end, bar_width, frequency_array[i]); // draw bar
+      }
+      window.requestAnimationFrame(animationLooper); // repeat animation 
+    }
+  </script>
+  </div>
+  </div>
+</body>
